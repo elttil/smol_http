@@ -1,4 +1,4 @@
-smol-http
+smol_http
 =========
 A simple http server supporting GET requests.
 
@@ -23,20 +23,23 @@ It is also possible to change values using the command line arguments
 Security
 --------
 
-The application is a seteuid binary and shall not be ran as root but instead
+The application is a seteuid binary and must not be ran as root but instead
 should be ran as a low privlege user that the application will later drop
 privleges to.
+
+smol_http uses unveil and pledge to limit its privleges. Pledge and unveil are
+enabled should it be compiled on a OpenBSD or SerenityOS machine.
 
 License
 -------
 
 This program is licensed under Affero GNU Public License Version 3. This may
 require you to in ceratin circumstances provide the source code of the
-application. Make sure you are following the license. See COPYING for more
-information.
+application. Make sure you are following the license. This program comes
+without any warranty. See COPYING for more information.
 
 One conceivable way of complying with the AGPL should no changes be made would
 be to simply link to this git repo and the commit the code is on. If changes
 are made then providing a diff file along with the git repo link should be good
-enough. Though this is paragraph does not trump anything stated in COPYING nor
-add any additional legal restrictions towards you using the software.
+enough. Please note that this paragraph does not trump anything stated in
+COPYING nor add any additional legal restrictions.

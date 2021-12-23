@@ -60,7 +60,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define PLEDGE(promise, exec) ;
 #endif
 
-#if HAS_ENVEIL
+#if HAS_UNVEIL
 #define UNVEIL(path, permissions) COND_PERROR_EXP(-1 == unveil(path, permissions), "unveil", exit(1))
 #else
 #define UNVEIL(path, permissions) ;
