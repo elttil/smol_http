@@ -43,9 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MAX_BUFFER             4096	// Size of the read buffer
 
 #ifndef PATH_MAX
-#define _PATH_MAX              4096
-#else
-#define _PATH_MAX              PATH_MAX
+#define PATH_MAX              4096
 #endif
 
 #define COND_PERROR_EXP(condition, function_name, expression)\
@@ -235,8 +233,8 @@ write:
 		DIR *d;
 		COND_PERROR_EXP(NULL == (d = opendir(".")), "opendir", goto cleanup);
 
-		char current_path[_PATH_MAX];
-		char back_path[_PATH_MAX];
+		char current_path[PATH_MAX];
+		char back_path[PATH_MAX];
 		COND_PERROR_EXP(!realpath(".", current_path), "realpath", goto directory_cleanup)
 		COND_PERROR_EXP(!realpath("..", back_path), "realpath", goto directory_cleanup)
 		if(0 > dprintf(socket_desc, "Index of %s/<br><a href='%s'>./</a><br><a href='%s'>../</a><br>",
@@ -250,7 +248,7 @@ write:
 			if(0 == strcmp(dir->d_name, ".") || 0 == strcmp(dir->d_name, ".."))
 				continue;
 
-			char tmp_path[_PATH_MAX];
+			char tmp_path[PATH_MAX];
 			COND_PERROR_EXP(!realpath(dir->d_name, tmp_path), "realpath", break);
 			if(0 > dprintf(socket_desc, "<a href='%s'>%s%s</a><br>", tmp_path, dir->d_name, (DT_DIR == dir->d_type)?"/":""))
 			{
