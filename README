@@ -1,6 +1,7 @@
 smol_http
 =========
-A simple http server supporting GET requests.
+A simple http server supporting GET requests. Written in less than 400 lines of
+C.
 
 Usage
 -----
