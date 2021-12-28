@@ -160,9 +160,9 @@ void connection_handler(int socket_desc)
 	int enter_directory = 0;
 	uint16_t i;
 	for(i = 0;filename[i] &&
-			filename[i] != ' ' &&
-			filename[i] != '\n' &&
-			filename[i] != '\r';i++);
+			' '  != filename[i] &&
+			'\n' != filename[i] &&
+			'\r' != filename[i];i++);
 
 	filename[i] = 0;
 
