@@ -1,5 +1,5 @@
 /*
-Copyright © 2021 Anton Kling <anton@kling.gg>
+Copyright © 2021-2022 Anton Kling <anton@kling.gg>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
@@ -354,7 +354,7 @@ int init_server(short port, const char * website_root)
 void usage(const char * const str)
 {
 	fprintf(stderr,
-	        "Usage: %s [-p PORT] -h(Print this message)\n", str);
+	        "Usage: %s [-p PORT] [-d Website root directory] -h(Print this message)\n", str);
 	puts("---");
 	puts(COPYRIGHT_STATEMENT);
 }
