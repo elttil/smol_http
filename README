@@ -11,6 +11,7 @@ Clone this respository and compile the software.
 	git clone https://github.com/0xc1f1/smol_http
 	cd smol_http
 	make
+	make install # This will install smol_http to /usr/bin
 
 The appplications default values can be configured via changing the values in
 the http.c file and recompilling the application.
