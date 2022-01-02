@@ -104,8 +104,6 @@ static const struct
 	{ "webm",	"video/webm" },
 };
 
-int chroot(const char *path);
-
 const char * const get_mime(const char * file)
 {
 	for(;*file && *file++ != '.';);
