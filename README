@@ -6,15 +6,15 @@ C.
 Usage
 -----
 
-Clone this respository and compile the software.
+Clone this repository and compile the software.
 
 	git clone https://github.com/0xc1f1/smol_http
 	cd smol_http
 	make
 	make install # This will install smol_http to /usr/bin
 
-The appplications default values can be configured via changing the values in
-the http.c file and recompilling the application.
+The applications default values can be configured via changing the values in
+the http.c file and recompiling the application.
 
 It is also possible to change values using the command line arguments
 
@@ -26,15 +26,15 @@ Security
 --------
 
 The application is a seteuid binary and must not be ran as root but instead
-should be ran as a low privlege user that the application will later drop
-privleges to.
+should be ran as a low privilege user that the application will later drop
+privileges to.
 
-smol_http uses unveil and pledge to limit its privleges. Pledge and unveil are
+smol_http uses unveil and pledge to limit its privileges. Pledge and unveil are
 enabled should it be compiled on a OpenBSD or SerenityOS machine.
 
 Attribution
 -----------
 Attribution is under no circumstance required. Read LICENSE for more
-informaiton. But if you use this project I would not mind attribution and/or
+information. But if you use this project I would not mind attribution and/or
 you sending me a mail at anton@kling.gg just so that I can see people are using
 my project(s).
