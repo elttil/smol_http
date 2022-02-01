@@ -32,16 +32,9 @@ privleges to.
 smol_http uses unveil and pledge to limit its privleges. Pledge and unveil are
 enabled should it be compiled on a OpenBSD or SerenityOS machine.
 
-License
--------
-
-This program is licensed under Affero GNU Public License Version 3. This may
-require you to in ceratin circumstances provide the source code of the
-application. Make sure you are following the license. This program comes
-without any warranty. See COPYING for more information.
-
-One conceivable way of complying with the AGPL should no changes be made would
-be to simply link to this git repo and the commit the code is on. If changes
-are made then providing a diff file along with the git repo link should be good
-enough. Please note that this paragraph does not trump anything stated in
-COPYING nor add any additional legal restrictions.
+Attribution
+-----------
+Attribution is under no circumstance required. Read LICENSE for more
+informaiton. But if you use this project I would not mind attribution and/or
+you sending me a mail at anton@kling.gg just so that I can see people are using
+my project(s).
