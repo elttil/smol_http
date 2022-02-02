@@ -38,6 +38,9 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 // Default directory should -d not be supplied.
 #define WEBSITE_ROOT "./site/"
 
+#define TIMEOUT_SECOND 3
+#define TIMEOUT_USECOND 0
+
 #define MAX_BUFFER 4096 // Size of the read buffer
 
 #ifndef PATH_MAX
@@ -141,6 +144,17 @@ void connection_handler(int socket_desc)
 	// that would deal with this.
 	COND_PERROR_EXP(SIG_ERR == signal(SIGPIPE, SIG_IGN), "signal",
 			goto cleanup);
+
+	// Ensure that we timeout should the send/recv take too long.
+	struct timeval timeout;
+	timeout.tv_sec = TIMEOUT_SECOND;
+	timeout.tv_usec = TIMEOUT_USECOND;
+	COND_PERROR_EXP(-1 == setsockopt(socket_desc, SOL_SOCKET, SO_RCVTIMEO,
+					 &timeout, sizeof(timeout)),
+			"setsockopt", goto cleanup);
+	COND_PERROR_EXP(-1 == setsockopt(socket_desc, SOL_SOCKET, SO_SNDTIMEO,
+					 &timeout, sizeof(timeout)),
+			"setsockopt", goto cleanup);
 
 	ssize_t recv_size;
 	COND_PERROR_EXP(-1 == (recv_size = recv(socket_desc, recv_buffer,
