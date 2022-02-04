@@ -310,6 +310,10 @@ int init_server(short port, const char *website_root) {
     // Disable usage of unveil()(this will also be
     // done by our pledge() call)
     UNVEIL(NULL, NULL);
+
+    // Reap all child processes that exit
+    signal(SIGCHLD, SIG_IGN);
+
     COND_PERROR_EXP(0 != chroot(website_root), "chroot", return 1);
     PLEDGE("stdio inet rpath exec id proc", "");
 
