@@ -72,13 +72,6 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #define ASSERT_NOT_REACHED assert(0)
 
-#define COPYRIGHT_STATEMENT                                                    \
-    "\
-This program is licensed under Affero GNU Public License Version 3.\n\
-See https://www.gnu.org/licenses/ for more information.\n\
-THIS PROGRAM COMES WITHOUT ANY WARRANTY; without even the implied\n\
-warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
-
 static const struct {
     char *ext;
     char *type;
@@ -369,8 +362,6 @@ void usage(const char *const str) {
             "Usage: %s [-p PORT] [-d Website root directory] -h(Print this "
             "message)\n",
             str);
-    puts("---");
-    puts(COPYRIGHT_STATEMENT);
 }
 
 int main(int argc, char **argv) {
