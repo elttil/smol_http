@@ -273,10 +273,10 @@ write:
     PLEDGE("stdio", NULL);
 
     struct stat buf;
-    fstat(fd, &buf);
+    COND_PERROR_EXP(-1 == fstat(fd, &buf), "fstat", goto fd_end);
     COND_PERROR_EXP(-1 == sendfile(socket_desc, fd, 0, buf.st_size), "sendfile",
                     /*NOP*/);
-
+fd_end:
     close(fd);
 cleanup:
     PLEDGE("", NULL);
