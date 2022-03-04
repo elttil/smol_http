@@ -105,12 +105,21 @@ static const struct {
 };
 
 const char *const get_mime(const char *file) {
-    for (; *file && *file++ != '.';)
+    const char *ext = file;
+    for (; *ext++;) // Move ext to end of string
         ;
+    for (; ext != file && *(ext - 1) != '.';
+         ext--) // Move ext back until we find a dot
+        ;
+    if (file == ext)
+        goto ret_default; // If there is no dot then there is no file
+                          // extension.
+
     for (size_t i = 0; i < sizeof(mimes) / sizeof(mimes[0]) - 1; i++)
-        if (0 == strcmp(mimes[i].ext, file))
+        if (0 == strcmp(mimes[i].ext, ext))
             return mimes[i].type;
 
+ret_default:
     return "application/octet-stream";
 }
 
