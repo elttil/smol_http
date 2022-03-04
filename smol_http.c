@@ -12,6 +12,7 @@ WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
+#include "config.h"
 #include <arpa/inet.h>
 #include <assert.h>
 #include <dirent.h>
@@ -29,19 +30,6 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <unistd.h>
-
-// Should xxx.html not exist these will be supplied instead.
-#define DEFAULT_404_SITE "404 - Not Found\0"
-#define DEFAULT_400_SITE "400 - Bad Request\0"
-
-// Default port should -p not be supplied.
-#define DEFAULT_PORT 1337
-
-// Default directory should -d not be supplied.
-#define WEBSITE_ROOT "./site/"
-
-#define TIMEOUT_SECOND 3
-#define TIMEOUT_USECOND 0
 
 #define MAX_BUFFER 4096 // Size of the read buffer
 
