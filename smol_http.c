@@ -25,7 +25,6 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/sendfile.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <sys/time.h>
@@ -45,6 +44,11 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #define HAS_PLEDGE (__OpenBSD__ | __serenity__)
 #define HAS_UNVEIL (__OpenBSD__ | __serenity__)
+#define HAS_SENDFILE (__linux__ | __FreeBSD__)
+
+#if HAS_SENDFILE
+#include <sys/sendfile.h>
+#endif
 
 #if HAS_PLEDGE
 #define PLEDGE(promise, exec)                                                  \
@@ -270,11 +274,19 @@ write:
     }
     PLEDGE("stdio", NULL);
 
+#if HAS_SENDFILE
     struct stat buf;
     COND_PERROR_EXP(-1 == fstat(fd, &buf), "fstat", goto fd_end);
     COND_PERROR_EXP(-1 == sendfile(socket_desc, fd, 0, buf.st_size), "sendfile",
                     /*NOP*/);
 fd_end:
+#else
+    char rwbuf[4096];
+    for (int l; 0 != (l = read(fd, rwbuf, sizeof(rwbuf)));) {
+        COND_PERROR_EXP(-1 == l, "read", break);
+        COND_PERROR_EXP(-1 == write(socket_desc, rwbuf, l), "write", break);
+    }
+#endif
     close(fd);
 cleanup:
     PLEDGE("", NULL);
