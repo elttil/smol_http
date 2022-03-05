@@ -43,8 +43,8 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
         expression;                                                            \
     }
 
-#define HAS_PLEDGE (__OpenBSD__ | __SerenityOS__)
-#define HAS_UNVEIL (__OpenBSD__ | __SerenityOS__)
+#define HAS_PLEDGE (__OpenBSD__ | __serenity__)
+#define HAS_UNVEIL (__OpenBSD__ | __serenity__)
 
 #if HAS_PLEDGE
 #define PLEDGE(promise, exec)                                                  \
