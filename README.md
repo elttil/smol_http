@@ -1,9 +1,7 @@
 # smol_http
----
 A simple http server supporting GET requests.
 
-# Usage
------
+## Usage
 
 Clone this repository and compile the software.
 
@@ -23,15 +21,13 @@ It is also possible to change values using the command line arguments
 
 * -d root directory
 
-# Security
----
+## Security
 
 The application is a seteuid binary and must not be ran as root but instead
 should be ran as a low privilege user that the application will later drop
 privileges to.
 
-# Attribution
----
+## Attribution
 
 Attribution is under no circumstance required but is appreciated. Read
 LICENSE for more information.
