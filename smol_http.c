@@ -392,7 +392,7 @@ int server_loop(const char *website_root, uint16_t port) {
       close(socket_desc);
       handle_connection(fd);
       close(fd);
-      exit(1);
+      exit(0);
     }
   }
   close(socket_desc);
