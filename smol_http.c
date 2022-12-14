@@ -277,6 +277,9 @@ void handle_connection(int socket) {
   int status_code = 200;
   int rc;
 
+  // Reap all child processes
+  signal(SIGCHLD, SIG_IGN);
+
   // We can ignore SIGPIPE as we already have checks
   // that would deal with this.
   COND_PERROR_EXP(SIG_ERR == signal(SIGPIPE, SIG_IGN), "signal", return );
