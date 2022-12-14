@@ -286,6 +286,9 @@ void handle_connection(int socket) {
     return;
 
   // Ensure that we timeout should the send take too long.
+  COND_PERROR_EXP(-1 == setsockopt(socket, SOL_SOCKET, SO_RCVTIMEO, &timeout,
+                                   sizeof(timeout)),
+                  "setsockopt", return );
   COND_PERROR_EXP(-1 == setsockopt(socket, SOL_SOCKET, SO_SNDTIMEO, &timeout,
                                    sizeof(timeout)),
                   "setsockopt", return );
@@ -299,9 +302,10 @@ void handle_connection(int socket) {
     return;
 
   // Write header
-  if (0 > dprintf(socket,
-                  "HTTP/1.1 %s\r\nContent-Type: %s\r\nServer: smol_http\r\n\r\n",
-                  status_code_to_error_message(status_code), mime)) {
+  if (0 >
+      dprintf(socket,
+              "HTTP/1.1 %s\r\nContent-Type: %s\r\nServer: smol_http\r\n\r\n",
+              status_code_to_error_message(status_code), mime)) {
     puts("dprintf error");
     return;
   }
