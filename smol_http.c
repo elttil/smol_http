@@ -243,7 +243,18 @@ int http_read_file(int socket, const char *path, int *status_code, int *fd,
   }
 
   if (S_ISDIR(statbuf.st_mode)) {
-    chdir(path);
+    if (-1 == chdir(path)) {
+      switch (errno) {
+      case EACCES:
+      case ENOENT:
+        *status_code = 404;
+        break;
+      default:
+        *status_code = 500;
+        break;
+      }
+      return 2;
+    }
     // Check if we can read /index.html in the directory. If not we give
     // a directory listing.
     int rc = http_read_file(socket, "index.html", status_code, fd, mime);
@@ -282,7 +293,7 @@ void handle_connection(int socket) {
 
   // We can ignore SIGPIPE as we already have checks
   // that would deal with this.
-  COND_PERROR_EXP(SIG_ERR == signal(SIGPIPE, SIG_IGN), "signal", return );
+  COND_PERROR_EXP(SIG_ERR == signal(SIGPIPE, SIG_IGN), "signal", return);
 
   rc = read(socket, buffer, 4096);
   if (-1 == rc)
@@ -291,10 +302,10 @@ void handle_connection(int socket) {
   // Ensure that we timeout should the send take too long.
   COND_PERROR_EXP(-1 == setsockopt(socket, SOL_SOCKET, SO_RCVTIMEO, &timeout,
                                    sizeof(timeout)),
-                  "setsockopt", return );
+                  "setsockopt", return);
   COND_PERROR_EXP(-1 == setsockopt(socket, SOL_SOCKET, SO_SNDTIMEO, &timeout,
                                    sizeof(timeout)),
-                  "setsockopt", return );
+                  "setsockopt", return);
 
   buffer[rc] = '\0';
   const char *path = parse_path(buffer, &status_code);
@@ -421,7 +432,7 @@ int main(int argc, char **argv) {
 
   short port = DEFAULT_PORT;
   char *website_root = WEBSITE_ROOT;
-  for (int ch; - 1 != (ch = getopt(argc, argv, "p:d:h"));)
+  for (int ch; -1 != (ch = getopt(argc, argv, "p:d:h"));)
     switch ((char)ch) {
     case 'p':
       if (0 == (port = atoi(optarg))) {
