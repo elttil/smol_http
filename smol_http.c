@@ -1,5 +1,6 @@
 #include "config.h"
 #include <arpa/inet.h>
+#include <assert.h>
 #include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -12,6 +13,10 @@
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <unistd.h>
+
+#define DIRECTORY_LISTING 3
+#define PROVIDE_ERROR_CODE 2
+#define READ_FILE 1
 
 #define COND_PERROR_EXP(condition, function_name, expression)                  \
   if (condition) {                                                             \
@@ -234,7 +239,7 @@ int http_read_file(int socket, const char *path, int *status_code, int *fd,
   if (-1 == stat(path, &statbuf)) {
     if (ENOENT == errno) {
       if (404 == *status_code) {
-        return 2;
+        return PROVIDE_ERROR_CODE;
       }
       *status_code = 404;
       return http_read_file(socket, "/404.html", status_code, fd, mime);
@@ -253,24 +258,24 @@ int http_read_file(int socket, const char *path, int *status_code, int *fd,
         *status_code = 500;
         break;
       }
-      return 2;
+      return PROVIDE_ERROR_CODE;
     }
     // Check if we can read /index.html in the directory. If not we give
     // a directory listing.
     int rc = http_read_file(socket, "index.html", status_code, fd, mime);
-    if (1 == rc)
-      return 1;
-    return 3;
+    if (READ_FILE == rc)
+      return READ_FILE;
+    return DIRECTORY_LISTING;
   }
 
   *fd = open(path, O_RDONLY);
   if (-1 == *fd) {
     if (200 == *status_code)
       *status_code = 500;
-    return 2;
+    return PROVIDE_ERROR_CODE;
   }
   *mime = get_mime(path);
-  return 1;
+  return READ_FILE;
 }
 
 void outfile(int socket, int fd) {
@@ -325,19 +330,23 @@ void handle_connection(int socket) {
   }
 
   switch (rc) {
-  case 3:
+  case DIRECTORY_LISTING:
     http_read_dir(socket);
     break;
-  case 2:
+  case PROVIDE_ERROR_CODE:
     // http_read_file could not find a file to handle the
     // error(404.html 400.html etc). Therefore we provide a error
     // that is compiled in the program.
     write_constant_content(socket, status_code);
     break;
-  default:
+  case READ_FILE:
     // Read from the file that http_read_file opened
     outfile(socket, fd);
     close(fd);
+    break;
+  default:
+    // This should never happen.
+    assert(0);
     break;
   }
 }
