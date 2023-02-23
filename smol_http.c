@@ -12,6 +12,7 @@
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <sys/time.h>
+#include <sys/wait.h>
 #include <unistd.h>
 
 #define DIRECTORY_LISTING 3
@@ -390,6 +391,10 @@ int server_loop(const char *website_root, uint16_t port) {
   COND_PERROR_EXP(0 != listen(socket_desc, 3), "listen", return 1);
 
   for (;; polling_queue_unset(&q)) {
+    // Reap all the zombie processes(for some reason having a signal
+    // handler does not solve the problem on some machines.)
+    (void)waitpid(-1, 0, WNOHANG);
+
     int rc;
     COND_PERROR_EXP(-1 == (rc = polling_queue_poll(&q)), "ppoll", continue);
     if (0 == rc)
