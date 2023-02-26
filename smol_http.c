@@ -100,18 +100,8 @@ typedef struct {
   uint16_t size;
 } polling_queue;
 
-int polling_queue_init(polling_queue *q, uint16_t s) {
-  q->fds = malloc(sizeof(struct pollfd) * s);
-  if (!q->fds)
-    return 0;
-  q->size = s;
-  q->num_fds = 0;
-  return 1;
-}
-
 int polling_queue_add(polling_queue *q, int fd, short flag) {
-  if (q->num_fds > q->size) {
-    // FIXME: Possibly allocate more size
+  if (q->num_fds >= q->size) {
     return 0;
   }
   q->fds[q->num_fds].fd = fd;
@@ -383,8 +373,12 @@ int server_loop(const char *website_root, uint16_t port) {
   }
 
   c = sizeof(struct sockaddr_in);
-  polling_queue q;
-  polling_queue_init(&q, 100);
+  struct pollfd fds[100];
+  polling_queue q = {
+    .fds = fds,
+    .size = 100,
+    .num_fds = 0,
+  };
 
   polling_queue_add(&q, socket_desc, POLLIN);
 
